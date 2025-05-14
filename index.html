@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오뱅크</title>
+    <link rel="stylesheet" href="lib/swiper-bundle.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" sizes="16x16" href="img/B16.gif">
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="lib/jquery-3.7.1.min.js"></script>
+
+
+
+<script>
+
+    //햄버거 버튼 누를 시
+    $(function () {
+
+        //.swiper 01
+        var swiper = new Swiper(".mainSwiper", {
+            spaceBetween: 30,
+            centeredSlides: true,
+            autoplay: {
+                delay: 15000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+
+        //.swiper 02
+        var swiper = new Swiper(".twoSwiper", {
+            spaceBetween: 30,
+            centeredSlides: true,
+            autoplay: {
+                delay: 15000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+
+        //.swiper 05
+        var swiper = new Swiper(".cardSwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 3,
+            spaceBetween: 30,
+            loop: true,
+            coverflowEffect: {
+                rotate: 30,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper_buttons .swiper-button-next",
+                prevEl: ".swiper_buttons .swiper-button-prev",
+            },
+        });
+    });
+</script><!-- script end -->
+
+<script>
+    $(function () {
+
+        //header 메뉴 hover 시 blur 효과과
+        const menus = document.querySelectorAll('.wrap_menu');
+        const blurBg = document.querySelector('.blur_bg');
+
+        menus.forEach(menu => {
+            if (menu.id === 'button') return; // 🚫 제외
+            const innerSubmenu = menu.querySelector('.inner_submenu');
+
+            // 메뉴 열릴 때 blur 활성화
+            menu.addEventListener('mouseenter', () => {
+                blurBg?.classList.add('active');
+            });
+
+            // 메뉴 닫힐 때 blur 비활성화
+            innerSubmenu?.addEventListener('mouseleave', () => {
+                blurBg?.classList.remove('active');
+            });
+        });
+
+        //인트로
+        window.addEventListener('load', function () {
+            const introCover = document.querySelector('.intro_cover');
+
+            // 아주 짧은 delay로 repaint 보장
+            setTimeout(() => {
+                introCover.style.opacity = '0';
+                introCover.style.pointerEvents = 'none'; // 클릭 방지
+
+                // transition 끝나고 완전히 제거
+                introCover.addEventListener('transitionend', () => {
+                    introCover.remove(); // 완전히 삭제
+                }, { once: true });
+
+            }, 2000); // 0.1초 delay (확실한 렌더링 보장)
+        });
+
+
+        const sky = document.querySelector('.sky');
+        let isNight = false;
+
+        setInterval(() => {
+            isNight = !isNight;
+            sky.classList.toggle('night', isNight);
+        }, 12000);
+
+        /* 1. 접속했을 때 화면 크기 감지 */
+        //화면 크기 $(window).width()
+
+        if ($(window).width() > 1024) {
+            // 마우스 올렸을 때 mouseenter()
+            // 마우스 올린 li한테 클래스명 active 추가
+
+            //header 메뉴 hover 시 box_submenu 열기기
+            const menus = document.querySelectorAll('.wrap_menu');
+
+            menus.forEach(menu => {
+
+                if (menu.id === 'button') return;
+
+                const summary = menu.querySelector('summary');
+                const submenu = menu.querySelector('.box_submenu');
+                const innerSubmenu = menu.querySelector('.inner_submenu');
+
+                let hoverTimeout;
+
+                // 마우스 진입 시: 나머지는 닫고 본인만 열기
+                menu.addEventListener('mouseenter', () => {
+                    menus.forEach(other => {
+                        if (other !== menu) {
+                            other.removeAttribute('open');
+                        }
+                    });
+                    clearTimeout(hoverTimeout);
+                    menu.setAttribute('open', true);
+                });
+
+                // summary 클릭 동작 방지
+                summary.addEventListener('click', (e) => {
+                    e.preventDefault();
+                });
+
+                // 💡 여기! inner_submenu에서 벗어났을 때만 닫기
+                innerSubmenu?.addEventListener('mouseleave', () => {
+                    hoverTimeout = setTimeout(() => {
+                        menu.removeAttribute('open');
+                    }, 100); // 살짝 여유 주기
+                });
+            });
+
+        } else {
+            $('.mo_menu').on('click', function () {
+                $('#gnbContent').toggleClass('active')
+            });
+            $('.cont_menu .wrap_menu').click(function () {
+                //조건식
+                //클릭한 선택자의 뒤에 있는 형제전택자(.depth_02)가 display값이 none이다.
+                if ($(this).siblings('.tit_submenu').css('display') == 'none') {
+                    $('.cont_menu .tit_submenu').slideUp();
+                    $(this).siblings('.tit_submenu').slideDown();
+
+                    $('.cont_menu .wrap_menu').removeClass('active');
+                    $(this).addClass('active');
+                } else {
+                    $(this).siblings('.tit_submenu').slideUp();
+                    $(this).removeClass('active');
+                };
+            });
+        }
+    });
+</script>
+
+<body>
+    <div id="wrap">
+        <header class="header">
+            <div class="inner">
+                <div class="logo">
+                    <a href="#">
+                        <img src="img/logo_black.svg" alt="">
+                    </a>
+                </div><!-- .logo -->
+
+                <button class="mo_menu">
+                    <img src="img/hamburger_btn.svg" alt="메뉴">
+                </button><!-- .mo_menu -->
+
+
+                <nav id="gnbContent" class="doc-gnb">
+                    <!-- gnbContent 메뉴 바로가기 링크 -->
+                    <div class="cont_menu">
+
+                        <details id="introduce" class="wrap_menu">
+                            <summary>은행소개</summary>
+                            <div class="box_submenu">
+                                <div class="inner_submenu">
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">카카오뱅크</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">브랜드</a></li>
+                                        <li><a href="" class="link_submenu">주주사 소개</a></li>
+                                        <li><a href="" class="link_submenu">오시는 길</a></li>
+                                        <li><a href="" class="link_submenu">제휴문의</a></li>
+                                        <li><a href="" class="link_submenu">금융기술연구소</a></li>
+                                        <li><a href="" class="link_submenu">카카오뱅크 인증서</a></li>
+
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">윤리경영</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">윤리강령</a></li>
+                                        <li><a href="" class="link_submenu">임직원행동기준</a></li>
+
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">새소식</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">공지사항</a></li>
+                                        <li><a href="" class="link_submenu">입찰공고</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">인재영입</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+                                </div><!-- .inner_submenu -->
+                            </div><!-- .box_submenu -->
+                        </details><!-- .introduce -->
+
+                        <details id="information" class="wrap_menu">
+                            <summary>IR투자정보</summary>
+                            <div class="box_submenu">
+                                <div class="inner_submenu">
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">공시정보</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">전자공시</a></li>
+                                        <li><a href="" class="link_submenu">경영공시</a></li>
+                                        <li><a href="" class="link_submenu">바젤공시</a></li>
+                                        <li><a href="" class="link_submenu">지배구조공시</a></li>
+                                        <li><a href="" class="link_submenu">기타공시</a></li>
+                                        <li><a href="" class="link_submenu">공시규정</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">경영정보</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">이사회</a></li>
+                                        <li><a href="" class="link_submenu">이사회 구성 가이드라인</a></li>
+                                        <li><a href="" class="link_submenu">지속가능경영</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">재무정보</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">재무제표</a></li>
+                                        <li><a href="" class="link_submenu">감사보고서</a></li>
+                                        <li><a href="" class="link_submenu">영업보고서</a></li>
+                                        <li><a href="" class="link_submenu">신용등급</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">IR자료실</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">실적발표</a></li>
+                                        <li><a href="" class="link_submenu">주가정보</a></li>
+                                        <li><a href="" class="link_submenu">배당현황</a></li>
+                                        <li><a href="" class="link_submenu">기업가치제고계획</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">IR일정</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">IR행사</a></li>
+                                        <li><a href="" class="link_submenu">IR미팅예약</a></li>
+                                        <li><a href="" class="link_submenu">주주총회</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">공고</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+                                </div><!-- .inner_submenu -->
+                            </div><!-- .box_submenu -->
+                        </details><!-- .information -->
+
+                        <details id="product" class="wrap_menu">
+                            <summary>상품안내</summary>
+                            <div class="box_submenu">
+                                <div class="inner_submenu">
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">통장/저축</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">입출금통장</a></li>
+                                        <li><a href="" class="link_submenu">모임통장</a></li>
+                                        <li><a href="" class="link_submenu">기록통장</a></li>
+                                        <li><a href="" class="link_submenu">세이프박스</a></li>
+                                        <li><a href="" class="link_submenu">저금통</a></li>
+                                        <li><a href="" class="link_submenu">정기예금</a></li>
+                                        <li><a href="" class="link_submenu">자유적금</a></li>
+                                        <li><a href="" class="link_submenu">26주적금</a></li>
+                                        <li><a href="" class="link_submenu">한달적금</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">대출</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">비상금대출</a></li>
+                                        <li><a href="" class="link_submenu">마이너스 통장대출</a></li>
+                                        <li><a href="" class="link_submenu">신용대출</a></li>
+                                        <li><a href="" class="link_submenu">중고차 구매대출</a></li>
+                                        <li><a href="" class="link_submenu">전월세보증금 대출</a></li>
+                                        <li><a href="" class="link_submenu">전월세보증금 대출 갈아타기</a></li>
+                                        <li><a href="" class="link_submenu">주택담보대출</a></li>
+                                        <li><a href="" class="link_submenu">주택담보대출 비교하기</a></li>
+                                        <li><a href="" class="link_submenu">주택담보대출 갈아타기</a></li>
+                                        <li><a href="" class="link_submenu">신용대출 비교하기</a></li>
+                                        <li><a href="" class="link_submenu">신용대출 갈아타기</a></li>
+                                        <li><a href="" class="link_submenu">내 신용정보</a></li>
+
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">투자/외환</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">펀드</a></li>
+                                        <li><a href="" class="link_submenu">증권사 주식계좌</a></li>
+                                        <li><a href="" class="link_submenu">달러박스</a></li>
+                                        <li><a href="" class="link_submenu">해외송금 보내기</a></li>
+                                        <li><a href="" class="link_submenu">해외송금 받기</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">카드</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">프렌즈 체크카드</a></li>
+                                        <li><a href="" class="link_submenu">모임 체크카드</a></li>
+                                        <li><a href="" class="link_submenu">제휴 신용카드</a></li>
+                                        <li><a href="" class="link_submenu">혜택 좋은 신용카드</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">사업자</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">개인사업자통장</a></li>
+                                        <li><a href="" class="link_submenu">부가세박스</a></li>
+                                        <li><a href="" class="link_submenu">개인사업자 신용대출</a></li>
+                                        <li><a href="" class="link_submenu">개인사업자 보증서대출</a></li>
+                                        <li><a href="" class="link_submenu">개인사업자 체크카드</a></li>
+                                        <li><a href="" class="link_submenu">내 사업장 신용정보</a></li>
+                                        <li><a href="" class="link_submenu">사업자 인증서</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">mini</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">카카오뱅크 mini</a></li>
+                                        <li><a href="" class="link_submenu">mini카드</a></li>
+                                        <li><a href="" class="link_submenu">mini 26일저금</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                </div><!-- .inner_submenu -->
+                            </div><!-- .box_submenu -->
+                        </details><!-- .Product -->
+
+                        <details id="center" class="wrap_menu">
+                            <summary>고객센터</summary>
+                            <div class="box_submenu">
+                                <div class="inner_submenu">
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">이용안내</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">자주 묻는 질문</a></li>
+                                        <li><a href="" class="link_submenu">이용시간 안내</a></li>
+                                        <li><a href="" class="link_submenu">ATM 이용안내</a></li>
+                                        <li><a href="" class="link_submenu">ATM 이용안내 (달러박스)</a></li>
+                                        <li><a href="" class="link_submenu">금리안내</a></li>
+                                        <li><a href="" class="link_submenu">금리인하요구권 안내</a></li>
+                                        <li><a href="" class="link_submenu">수수료안내</a></li>
+                                        <li><a href="" class="link_submenu">상담안내</a></li>
+                                        <li><a href="" class="link_submenu">채무자보호안내</a></li>
+                                        <li><a href="" class="link_submenu">채무조정안내</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">상담하기</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">고객의 소리</a></li>
+                                        <li><a href="" class="link_submenu">1:1 문의</a></li>
+
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">소비자보호</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">소비자보호체계</a></li>
+                                        <li><a href="" class="link_submenu">소비자보호 우수사례</a></li>
+                                        <li><a href="" class="link_submenu">전자민원</a></li>
+                                        <li><a href="" class="link_submenu">소비자보호공시</a></li>
+                                        <li><a href="" class="link_submenu">민원사무편람</a></li>
+                                        <li><a href="" class="link_submenu">금융정보</a></li>
+                                        <li><a href="" class="link_submenu">보안취약점 신고 안내</a></li>
+                                        <li><a href="" class="link_submenu">판매대리·중개업자 증서</a></li>
+                                        <li><a href="" class="link_submenu">비대면 금융사고 책임분담안내</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">금융사기대응</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">금융사기예방</a></li>
+                                        <li><a href="" class="link_submenu">피해대처방법</a></li>
+                                        <li><a href="" class="link_submenu">피해신고관련서식</a></li>
+                                        <li><a href="" class="link_submenu">카카오뱅크 사칭제보</a></li>
+                                        <li><a href="" class="link_submenu">불법도박 이용계좌 신고</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">증명서</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">나의 증명서 발급내역</a></li>
+                                        <li><a href="" class="link_submenu">증명서 진위 확인</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">약관 ・ 서식</strong></a>
+                                        </li>
+
+                                        <li><a href="" class="link_submenu">약관</a></li>
+                                        <li><a href="" class="link_submenu">서식</a></li>
+                                        <li><a href="" class="link_submenu">상품설명서</a></li>
+                                        <li><a href="" class="link_submenu">상품공시</a></li>
+                                        <li><a href="" class="link_submenu">펀드공시</a></li>
+                                    </ul><!-- .list_submenu -->
+
+                                </div><!-- .inner_submenu -->
+                            </div><!-- .box_submenu -->
+                        </details><!-- .center -->
+
+                        <details id="site" class="wrap_menu">
+                            <summary>관련사이트</summary>
+                            <div class="box_submenu">
+                                <div class="inner_submenu">
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">카카오뱅크 AD</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">카카오뱅크 인증서</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">금융기술연구소</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+
+                                    <ul class="list_submenu">
+                                        <li>
+                                            <a href="" class="link_submenu">
+                                                <strong class="tit_submenu">기술블로그</strong></a>
+                                        </li>
+                                    </ul><!-- .list_submenu -->
+
+                                </div><!-- .inner_submenu -->
+                            </div><!-- .box_submenu -->
+                        </details><!-- .site -->
+
+                        <details id="button" class="wrap_menu">
+                            <summary>
+                                <a href="#"><img src="img/header_btn.svg" alt=""></a>
+                            </summary>
+                        </details><!-- .button -->
+
+                    </div><!-- cont_menu -->
+                </nav><!-- .gnbContent -->
+            </div><!-- .inner -->
+            <div class="blur_bg"></div>
+        </header><!-- .header end -->
+
+        <main class="main">
+
+            <div class="intro_cover">
+                <img src="img/logo_yellow.svg" alt="Logo">
+            </div><!-- .intro_cover -->
+
+            <div class="intro_video_bg">
+                <video src="img/kakaobank_video_.mp4" autoplay muted loop></video>
+            </div><!-- .intro_video_bg -->
+
+        </main><!-- .main end -->
+
+        <section class="section_01">
+            <div class="inner">
+                <div class="title">
+                    <img src="img/sec_01_title_img.svg" alt="">
+                    <h3>IT 기술로 카카오뱅크를 만들어 갑니다.</h3>
+                </div><!-- .title -->
+
+                <div class="item_wrap">
+
+                    <div class="item">
+                        <div class="text">
+                            <strong>간결하고, 유려하게</strong>
+                            <p>작은 모바일 화면에 적합하도록 <br />
+                                복잡함을 덜어낸 유려하고 친화적인 UX</p>
+                        </div><!-- .text -->
+                        <div class="image">
+                            <img src="img/sec_01_img_01.png" alt="">
+                        </div><!-- .image -->
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <div class="text">
+                            <strong>간편한 인증, 철저한 보안</strong>
+                            <p>지문, 비밀번호로 간편한 인증 <br />
+                                IT 기술의 강력한 보안 검증과 데이터 암호화</p>
+                        </div><!-- .text -->
+                        <div class="image">
+                            <img src="img/sec_01_img_02.png" alt="">
+                        </div><!-- .image -->
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <div class="text">
+                            <strong>Mobile First, One App</strong>
+                            <p>모바일에서 뱅킹이 더 쉽고 편리하게 <br />
+                                여러 앱을 설치할 필요 없이 하나의 앱으로</p>
+                        </div><!-- .text -->
+                        <div class="image">
+                            <img src="img/sec_01_img_03.svg" alt="">
+                        </div><!-- .image -->
+                    </div><!-- .item -->
+
+                </div><!-- .item_wrap -->
+            </div><!-- .inner -->
+        </section><!-- .section_01 end -->
+
+        <section class="section_02">
+            <div class="inner">
+                <div class="title">
+                    <img src="img/sec_02_title_img.svg.svg" alt="">
+                    <h3>카카오뱅크 서비스 소개</h3>
+                </div><!-- .title -->
+                <div class="item_wrap">
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_01.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>입출금통장</span>
+                                <strong>모바일로 더 손쉬운 <br />
+                                    계좌개설, 간편한 이체</strong>
+                                <p>인증서, OTP 없이 계좌 개설이 간편합니다.<br />
+                                    여러 건의 이체도 몇 번의 터치로<br />
+                                    손쉽게 보낼 수 있습니다.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_02.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>정기예금</span>
+                                <strong>실시간 이자로 돈 모으는 <br />
+                                    재미가 쏠쏠한 정기예금</strong>
+                                <p>조건 없이 누구나 쉽게 가입할 수 있는 정기예금! <br />
+                                    원하는 금액과 기간으로 자유롭게 운용하세요.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_03.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>자유적금</span>
+                                <strong>조건이나 손해없이,<br />
+                                    내맘대로 넣는 자유적금</strong>
+                                <p>납입일 · 횟수 걱정 없이 자유롭게!<br />
+                                    자동이체와 추가 납입으로 편리하게 적금 운용하세요.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_04.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>모임통장</span>
+                                <strong>함께 쓰고 같이 보는<br />
+                                    모임통장</strong>
+                                <p>카카오톡 친구를 바로 모임통장으로 초대하고<br />
+                                    친구들과 함께 잔액과 입출금 현황을<br />
+                                    확인할 수 있습니다.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_05.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>26주적금</span>
+                                <strong>함께 도전해서 재미있는<br />
+                                    26주적금</strong>
+                                <p>26주동안 변화하는 재미에 빠져있는 사이<br />
+                                    어느덧 만기 달성 경험을 맛보게 됩니다.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                    <div class="item">
+                        <a href="">
+                            <div class="image">
+                                <img src="img/sec_02_img_06.svg" alt="">
+                            </div><!-- .image -->
+                            <div class="text">
+                                <span>해외송금</span>
+                                <strong>해외계좌송금과<br />
+                                    WU빠른해외송금을<br />
+                                    더 쉽고, 저렴하게</strong>
+                                <p>해외계좌송금이 가능한 22개국을 포함하여<br />
+                                    전세계 200여개국으로 WU빠른해외송금이 가능합니다.</p>
+                            </div><!-- .text -->
+                        </a>
+                    </div><!-- .item -->
+
+                </div><!-- .item_wrap -->
+
+                <div class="viewmore">
+                    <button type="button" class="sec02_btn">서비스 전체보기</button>
+                    <img src="img/viewmore.svg" alt="">
+                </div><!-- .viewmore -->
+
+            </div><!-- .inner -->
+        </section><!-- .section_02 end -->
+
+        <section class="section_03">
+            <div class="inner">
+                <div class="title">
+                    <img src="img/sec_03_title_img.svg.svg" alt="">
+                    <h3>카카오뱅크 대출</h3>
+                </div><!-- .title -->
+
+                <div class="hero">
+                    <div class="sky">
+                        <img src="img/sun.svg" class="sun" alt="태양">
+                        <img src="img/moon.svg" class="moon" alt="달">
+                        <div class="content">
+                            <strong>복잡한 서류 제출을 간편하게,<br />
+                                내가 원하는 시간에</strong>
+                            <p>이사 날짜가 주말이나 공휴일이어도<br />전월세보증금 대출을 신청할 수 있습니다.</p>
+                            <ul class="sec03_btn">
+
+                                <li>
+                                    <a href="">
+                                        <span>마이너스 통장대출</span>
+                                        <img src="img/viewmore_white.svg" alt="">
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="">
+                                        <span>신용대출</span>
+                                        <img src="img/viewmore_white.svg" alt="">
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="">
+                                        <span>개인사업자 대출</span>
+                                        <img src="img/viewmore_white.svg" alt="">
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="">
+                                        <span>전월세보증금 대출</span>
+                                        <img src="img/viewmore_white.svg" alt="">
+                                    </a>
+                                </li>
+
+                            </ul><!-- .sec03_btn -->
+                            <div class="image">
+                                <img src="img/section_03_img.svg" alt="">
+                            </div><!-- .image -->
+                        </div><!-- .content -->
+                    </div><!-- .sky -->
+                </div><!-- .hero end -->
+
+            </div><!-- .inner -->
+        </section><!-- .section_03 end -->
+
+        <section class="section_04">
+            <div class="flow_wrap">
+                <div class="flow_track">
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_01.svg" alt=""></div>
+                        <div class="pill_text">통장/저축</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_02.svg" alt=""></div>
+                        <div class="pill_text">대출</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_03.svg" alt=""></div>
+                        <div class="pill_text">투자/외환</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_04.svg" alt=""></div>
+                        <div class="pill_text">카드</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_05.svg" alt=""></div>
+                        <div class="pill_text">사업자</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_06.svg" alt=""></div>
+                        <div class="pill_text">mini</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_01.svg" alt=""></div>
+                        <div class="pill_text">통장/저축</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_02.svg" alt=""></div>
+                        <div class="pill_text">대출</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_03.svg" alt=""></div>
+                        <div class="pill_text">투자/외환</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_04.svg" alt=""></div>
+                        <div class="pill_text">카드</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_05.svg" alt=""></div>
+                        <div class="pill_text">사업자</div>
+                    </div><!-- .flow_item -->
+
+                    <div class="flow_item">
+                        <div class="icon_circle"><img src="img/sec04_flow_06.svg" alt=""></div>
+                        <div class="pill_text">mini</div>
+                    </div><!-- .flow_item -->
+                </div><!-- .flow_track -->
+            </div><!-- .flow_wrap -->
+        </section><!-- .section_04 end-->
+
+        <section class="section_05">
+            <div class="inner">
+                <div class="title">
+                    <h3>프렌즈 체크카드<br />
+                        내가 고르는 선택의 즐거움</h3>
+                    <p>프렌즈 디자인부터 멋스러운 블랙 컬러 카드까지 원하는 디자인과 기능을 선택할 수 있습니다.</p>
+
+                    <div class="viewmore">
+                        <a href="">
+                            <button type="button" class="sec05_btn">카카오뱅크 프렌즈 체크카드</button>
+                            <img src="img/viewmore_white.svg" alt="">
+                        </a>
+                    </div><!-- .viewmore -->
+                </div><!-- .title -->
+
+                <div class="swiper_area">
+                    <!-- Swiper -->
+                    <div class="swiper cardSwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="img/card-1.png">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="img/card-2.png">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="img/card-3.png">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="img/card-4.png">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="img/card-5.png">
+                            </div>
+                        </div><!-- .swiper-wrapper -->
+                    </div><!-- .cardSwiper -->
+                    <div class="swiper_buttons">
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div><!-- .swiper_buttons -->
+                </div><!-- .swiper_area -->
+
+
+            </div><!-- .inner -->
+        </section><!-- section_05 end -->
+
+        <footer class="footer">
+            <div class="inner">
+
+                <!-- 약관 / 메뉴 -->
+                <ul class="footer-menu">
+                    <li><a href="#">모바일뱅킹 서비스 이용약관</a></li>
+                    <li><a href="#">전자금융거래 기본약관</a></li>
+                    <li><a href="#">위치기반 서비스 이용약관</a></li>
+                    <li><a href="#">카카오뱅크 인증서 서비스 이용약관</a></li>
+                    <li><a href="#">개인정보처리방침</a></li>
+                    <li><a href="#">신용정보활용체제</a></li>
+                    <li><a href="#">전자서명업무준칙</a></li>
+                </ul>
+
+                <!-- 회사정보 -->
+                <div class="footer-info">
+                    <p>㈜카카오뱅크·은행업·사업자번호 375-88-00197·대표전화 1599-3333 (해외 +82-2-6420-3333)</p>
+                    <p>Copyright © KakaoBank Corp. All rights reserved.</p>
+                </div>
+
+                <!-- 인증 & 소셜 -->
+                <div class="footer-icons">
+                    <!-- 인증마크 -->
+                    <div class="certification">
+                        <img src="img/footer_cert_1.svg" alt="웹트러스트 인증">
+                        <img src="img/footer_cert_2.svg" alt="웹 접근성 인증">
+                    </div><!-- .certification -->
+
+                    <!-- 소셜 아이콘 -->
+                    <div class="social">
+                        <a href="#"><img src="img/footer_facebook.svg" alt="Facebook"></a>
+                        <a href="#"><img src="img/footer_youtube.svg" alt="Instagram"></a>
+                        <a href="#"><img src="img/footer_insta.svg" alt="Youtube"></a>
+                        <a href="#"><img src="img/footer_brunch.svg" alt="Brunch"></a>
+                    </div><!-- .social -->
+                </div><!-- .footer-icons -->
+
+            </div><!-- .inner -->
+        </footer><!-- .footer end -->
+
+    </div><!-- .wrap -->
+</body>
+
+</html>
