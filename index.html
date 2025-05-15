@@ -13,8 +13,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="lib/jquery-3.7.1.min.js"></script>
 
-
-
 <script>
 
     //햄버거 버튼 누를 시
@@ -97,35 +95,6 @@
             });
         });
 
-        //인트로
-        window.addEventListener('load', function () {
-            const introCover = document.querySelector('.intro_cover');
-
-            // 아주 짧은 delay로 repaint 보장
-            setTimeout(() => {
-                introCover.style.opacity = '0';
-                introCover.style.pointerEvents = 'none'; // 클릭 방지
-
-                // transition 끝나고 완전히 제거
-                introCover.addEventListener('transitionend', () => {
-                    introCover.remove(); // 완전히 삭제
-                }, { once: true });
-
-            }, 2000); // 0.1초 delay (확실한 렌더링 보장)
-        });
-
-
-        const sky = document.querySelector('.sky');
-        let isNight = false;
-
-        setInterval(() => {
-            isNight = !isNight;
-            sky.classList.toggle('night', isNight);
-        }, 12000);
-
-        /* 1. 접속했을 때 화면 크기 감지 */
-        //화면 크기 $(window).width()
-
         if ($(window).width() > 1024) {
             // 마우스 올렸을 때 mouseenter()
             // 마우스 올린 li한테 클래스명 active 추가
@@ -185,7 +154,37 @@
                     $(this).removeClass('active');
                 };
             });
-        }
+        };
+
+        //인트로
+        window.addEventListener('load', function () {
+            const introCover = document.querySelector('.intro_cover');
+
+            // 아주 짧은 delay로 repaint 보장
+            setTimeout(() => {
+                introCover.style.opacity = '0';
+                introCover.style.pointerEvents = 'none'; // 클릭 방지
+
+                // transition 끝나고 완전히 제거
+                introCover.addEventListener('transitionend', () => {
+                    introCover.remove(); // 완전히 삭제
+                }, { once: true });
+
+            }, 2000); // 0.1초 delay (확실한 렌더링 보장)
+        });
+
+
+        const sky = document.querySelector('.sky');
+        let isNight = false;
+
+        setInterval(() => {
+            isNight = !isNight;
+            sky.classList.toggle('night', isNight);
+        }, 12000);
+
+        /* 1. 접속했을 때 화면 크기 감지 */
+        //화면 크기 $(window).width()
+
     });
 </script>
 
