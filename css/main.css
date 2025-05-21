@@ -1447,6 +1447,7 @@
 
     .section_03 .inner .title {
         gap: 10px;
+        margin-bottom: 30px;
     }
 
     .section_03 .inner .title img {
